@@ -16,7 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { MoreHorizontal, Pencil, Trash2, Eye } from "lucide-react";
 import { format } from "date-fns";
 
 export default function CategoriesPage() {
@@ -37,7 +37,11 @@ export default function CategoriesPage() {
     {
       key: "nameAr",
       header: "Name (AR)",
-      render: (row) => <span dir="rtl">{row.nameAr ?? "—"}</span>,
+      render: (row) => (
+        <span dir="rtl" className="font-medium">
+          {row.nameAr ?? "—"}
+        </span>
+      ),
     },
     {
       key: "parent",
@@ -61,7 +65,13 @@ export default function CategoriesPage() {
     {
       key: "createdAt",
       header: "Created",
-      render: (row) => format(new Date(row.createdAt), "MMM d, yyyy"),
+      render: (row) => {
+        try {
+          return format(new Date(row.createdAt), "MMM d, yyyy");
+        } catch {
+          return row.createdAt ?? "—";
+        }
+      },
     },
     {
       key: "actions",
@@ -75,11 +85,19 @@ export default function CategoriesPage() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            {/* FIX BUG-014: add View detail option */}
+            <DropdownMenuItem onClick={() => router.push(`/categories/${row.id}`)}>
+              <Eye className="mr-2 h-4 w-4" />
+              View
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => router.push(`/categories/${row.id}/edit`)}>
               <Pencil className="mr-2 h-4 w-4" />
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-destructive" onClick={() => setDeleteId(row.id)}>
+            <DropdownMenuItem
+              className="text-destructive"
+              onClick={() => setDeleteId(row.id)}
+            >
               <Trash2 className="mr-2 h-4 w-4" />
               Delete
             </DropdownMenuItem>
@@ -116,7 +134,7 @@ export default function CategoriesPage() {
         open={!!deleteId}
         onOpenChange={(open) => !open && setDeleteId(null)}
         title="Delete Category"
-        description="Deleting this category may affect products assigned to it."
+        description="Deleting this category may affect products assigned to it. This action cannot be undone."
         confirmLabel="Delete"
         isLoading={deleteMutation.isPending}
         onConfirm={async () => {

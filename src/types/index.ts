@@ -56,27 +56,36 @@ export type UpdateSupplierInput = Partial<CreateSupplierInput>;
 
 // ─── Category ─────────────────────────────────────────────────────────────────
 
+/** Normalised frontend shape — all camelCase, id coerced to string */
 export interface Category {
   id: string;
   name: string;
   nameAr?: string;
   slug?: string;
   description?: string;
+  descriptionAr?: string;
   parentId?: string | null;
   parent?: Category | null;
-  image?: string;
-  status: "active" | "inactive";
+  image?: string;   // mapped from image_url
+  iconUrl?: string; // mapped from icon_url
+  synonyms?: string[];
+  sortId?: number;
+  status: "active" | "inactive"; // mapped from is_active (boolean)
   createdAt: string;
   updatedAt: string;
 }
 
+/** Payload sent to the API — snake_case to match backend */
 export interface CreateCategoryInput {
   name: string;
-  nameAr?: string;
+  name_ar?: string;
   description?: string;
-  parentId?: string | null;
-  image?: string;
-  status?: "active" | "inactive";
+  description_ar?: string;
+  parent_id?: number | null;
+  image_url?: string;
+  icon_url?: string;
+  synonyms?: string[];
+  is_active?: boolean;
 }
 
 export type UpdateCategoryInput = Partial<CreateCategoryInput>;

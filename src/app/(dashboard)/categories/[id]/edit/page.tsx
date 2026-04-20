@@ -25,6 +25,8 @@ export default function EditCategoryPage() {
     router.push("/categories");
   };
 
+  // parentOptions uses normalized id (string) — already correct
+
   if (isLoading) {
     return (
       <div className="flex h-48 items-center justify-center">
