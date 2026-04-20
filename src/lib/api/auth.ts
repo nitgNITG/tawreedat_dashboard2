@@ -2,7 +2,8 @@ import apiClient from "./client";
 import { User } from "@/types";
 
 interface LoginInput {
-  email: string;
+  phone?: string;
+  email?: string;
   password: string;
 }
 
